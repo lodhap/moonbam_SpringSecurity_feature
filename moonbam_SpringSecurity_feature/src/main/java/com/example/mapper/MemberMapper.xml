@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberMapper">
+
+    <!-- 다중행 반환 -->
+	<select id="userDetail" resultType="com.example.dto.Member" parameterType="String">
+	  select * from  member
+	   where username= #{username}
+	</select>
+	<select id="userDetail2" resultType="MemberDTO" parameterType="String">
+	   select username, role from member where username= #{username}
+	</select>
+	
+	<insert id="register" parameterType="MemberDTO">
+		insert into member values (member_id_seq.NEXTVAL,#{username},#{password},#{email},'테스트',SYSDATE)
+	</insert>
+
+	<!-- <delete id="deleteByDeptno" 
+	parameterType="int">
+		delete from dept
+		where deptno = #{deptno}
+	</delete>
+	<delete id="deleteByDname" 
+	parameterType="string">
+	   delete from dept
+		where dname = #{dname}
+	</delete>
+    <insert id="insert" parameterType="Dept">
+      insert into dept ( deptno, dname, loc)
+      values ( #{deptno}, #{dname} , #{loc})
+    </insert>
+    <update id="update" parameterType="Dept">
+      update dept
+      set dname=#{dname}, loc=#{loc}
+      where deptno=#{deptno}
+    </update> -->
+
+
+	
+
+</mapper>
+
+
+
+
+
+
