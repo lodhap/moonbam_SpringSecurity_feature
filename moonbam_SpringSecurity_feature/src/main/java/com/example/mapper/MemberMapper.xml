@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="register" parameterType="MemberDTO">
-		insert into member values (member_id_seq.NEXTVAL,#{username},#{password},#{email},'테스트',SYSDATE)
+		insert into member values (member_id_seq.NEXTVAL,#{username},#{password},#{email},'ROLE_USER',SYSDATE)
 	</insert>
 
 	<!-- <delete id="deleteByDeptno" 

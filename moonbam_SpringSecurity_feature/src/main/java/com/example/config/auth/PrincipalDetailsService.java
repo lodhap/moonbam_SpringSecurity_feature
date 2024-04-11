@@ -18,17 +18,18 @@ import com.example.security.dto.SecurityUser;
 public class PrincipalDetailsService implements UserDetailsService{
 
 	@Autowired
-	MemberDAO dao;
+	private MemberDAO dao;
 	
 	// 시큐리티 session(내부에 Authentication(내부에 UserDetails가 들어감))
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//		System.out.println("username: "+username);
 		Member member= dao.userDetail(username);
 		if(member==null) {  //사용자가 없는 경우
 			throw new UsernameNotFoundException(username+" 사용자없음");
 		}else {
-			return new SecurityUser(member);
-		}	
+			return new PrincipalDetails(member);
+		}
 	}
 
 }
