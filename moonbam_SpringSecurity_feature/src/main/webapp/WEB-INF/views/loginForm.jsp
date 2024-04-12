@@ -14,5 +14,6 @@
 		<button>로그인</button>
 	</form>
 	<a href="/registerForm">회원가입</a>
+	<a href="/oauth2/authorization/google">구글로그인</a>
 </body>
 </html>

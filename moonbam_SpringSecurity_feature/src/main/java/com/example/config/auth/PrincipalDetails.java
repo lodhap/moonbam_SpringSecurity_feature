@@ -2,9 +2,11 @@ package com.example.config.auth;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.example.dto.Member;
 
@@ -16,7 +18,7 @@ import com.example.dto.Member;
 
 // Security Session => Authentication => UserDetails 
 
-public class PrincipalDetails implements UserDetails{
+public class PrincipalDetails implements UserDetails, OAuth2User{
 	
 	private Member member; //콤포지션
 	
@@ -76,6 +78,20 @@ public class PrincipalDetails implements UserDetails{
 		// 그럼 false를 통해 휴면계정 관리 기능을 구현 가능
 		return true;
 	}
+
+	///////////////// OAuth2User 인터페이스 오버라이딩된 함수 2개
+	@Override
+	public Map<String, Object> getAttributes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	
 	
 

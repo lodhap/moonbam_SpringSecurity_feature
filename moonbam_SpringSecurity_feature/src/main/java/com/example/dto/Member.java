@@ -11,6 +11,10 @@ public class Member {
 	private String password;
 	private String email;
 	private String role;
+	
+	private String provider;
+	private String providerId;
+	
 	private Timestamp createDate;
 	
 	

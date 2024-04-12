@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.config.auth.PrincipalDetailsService;
+import com.example.config.oauth.PrincipalOauth2UserService;
 import com.example.service.BoardUserDetailService;
 
 
@@ -31,6 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private PrincipalDetailsService principalDetailsService;
 	
+	@Autowired
+	PrincipalOauth2UserService principalOauth2UserService;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
@@ -45,7 +49,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.loginPage("/loginForm")
 			
 			.loginProcessingUrl("/login") //login주소가 호출이 되면 시큐리티가 낚아채서 대신 로그인을 진행해줍니다.
-			.defaultSuccessUrl("/");
+			.defaultSuccessUrl("/")
+			
+			.and()
+			.oauth2Login()
+			.loginPage("/loginForm")
+			// 구글 로그인이 완료된 뒤의 후처리 필요함
+			// 1. 코드받기(인증)
+			// 2. 엑세스토큰(권한)
+			// 3. 사용자프로필 정보를 가져와서
+			// 4-1. 그 정보를 토대로 회원가입을 자동으로 진행시키기도 함
+			// 4-2. 만약 그 정보가 모자라다면 추가적인 회웝가입 창이 필요함
+			// Tip. 코드x, 엑세스토큰+사용자프로필정보O
+			
+			.userInfoEndpoint()
+			.userService(principalOauth2UserService); // Oauth2UserService 타입의 객체
 		
 //		http.userDetailsService(boardUserDetailService);
 		http.userDetailsService(principalDetailsService);
