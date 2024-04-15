@@ -21,9 +21,14 @@ import com.example.dto.Member;
 public class PrincipalDetails implements UserDetails, OAuth2User{
 	
 	private Member member; //콤포지션
+	private Map<String, Object> attributes;
 	
 	public PrincipalDetails(Member member) {
 		this.member = member;
+	}
+	public PrincipalDetails(Member member, Map<String, Object> attributes) {
+		this.member = member;
+		this.attributes = attributes;
 	}
 
 	//해당 User의 권한을 리턴하는 곳
@@ -83,7 +88,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User{
 	@Override
 	public Map<String, Object> getAttributes() {
 		// TODO Auto-generated method stub
-		return null;
+		return attributes;
 	}
 
 	@Override
@@ -94,5 +99,4 @@ public class PrincipalDetails implements UserDetails, OAuth2User{
 	
 	
 	
-
 }

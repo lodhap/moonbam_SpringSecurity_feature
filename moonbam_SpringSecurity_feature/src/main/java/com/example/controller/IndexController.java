@@ -29,8 +29,6 @@ public class IndexController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-// 
-	// 일반 로그인 유저정보 조회
 	@GetMapping("/test/login")
 	public @ResponseBody String testLogin(Authentication authentication
 			, @AuthenticationPrincipal PrincipalDetails userDetails) {//DI 의존성 주입
@@ -41,18 +39,18 @@ public class IndexController {
 		System.out.println("userDetails: "+userDetails.getUsername());
 		return "세션 정보 확인하기";
 	}
-	
 	// 구글 로그인 유저정보 조회
 	// 소셜인지 일반인지에 따라 형식이 맞는 객체로 casting 해줘야 오류가 안남
-	@GetMapping("/test/oauth/login")
-	public @ResponseBody String testOAuthLogin(Authentication authentication
-			, @AuthenticationPrincipal OAuth2User oauth) {
-		System.out.println("/test/login ==============");
-		OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
-		System.out.println("authentication: " +oAuth2User.getAttributes());
-		System.out.println("OAuth2User: " +oauth.getAttributes());
-		return "OAuth 세션 정보 확인하기";
-	}
+//	@GetMapping("/test/oauth/login")
+//	public @ResponseBody String testOAuthLogin(Authentication authentication
+//			, @AuthenticationPrincipal OAuth2User oauth) {
+//		System.out.println("/test/login ==============");
+//		OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
+//		System.out.println("authentication: " +oAuth2User.getAttributes());
+//		System.out.println(oauth.getAttributes());
+//		System.out.println("OAuth2User: " +oauth.getAttributes());
+//		return "OAuth 세션 정보 확인하기";
+//	}
 	
 	
 	@PostMapping("/register")

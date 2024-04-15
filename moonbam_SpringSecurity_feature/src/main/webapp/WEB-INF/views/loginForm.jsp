@@ -13,7 +13,10 @@
 		비밀번호:<input type="password"  name="password" placeholder="Password"><br/>
 		<button>로그인</button>
 	</form>
+	
+	<a href="/oauth2/authorization/google">구글 로그인</a>
+	<a href="/oauth2/authorization/naver">네이버 로그인</a>
+	
 	<a href="/registerForm">회원가입</a>
-	<a href="/oauth2/authorization/google">구글로그인</a>
 </body>
 </html>

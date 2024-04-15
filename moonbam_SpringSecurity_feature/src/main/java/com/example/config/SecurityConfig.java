@@ -21,10 +21,10 @@ import com.example.service.BoardUserDetailService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	// 해당 메서드의 리턴되는 오브젝트를 IOC로 등록해준다.
-	@Bean
-	public BCryptPasswordEncoder encodePwd() {
-		return new BCryptPasswordEncoder();
-	}
+//	@Bean
+//	public BCryptPasswordEncoder encodePwd() {
+//		return new BCryptPasswordEncoder();
+//	}
 	
 //	@Autowired
 //	private BoardUserDetailService boardUserDetailService;
@@ -34,7 +34,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	PrincipalOauth2UserService principalOauth2UserService;
-	
+
+
+	public SecurityConfig() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+	public SecurityConfig(boolean disableDefaults) {
+		super(disableDefaults);
+		// TODO Auto-generated constructor stub
+	}
+
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
