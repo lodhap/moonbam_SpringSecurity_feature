@@ -32,5 +32,13 @@ public class NaverUserInfo implements OAuth2UserInfo{
 		// TODO Auto-generated method stub
 		return (String) attributes.get("name");
 	}
+
+	@Override
+	public Map<String, Object> getAttributes() {
+		return attributes;
+	}
+	
+	
+	
 	
 }

@@ -32,7 +32,7 @@ public class IndexController {
 	@GetMapping("/test/login")
 	public @ResponseBody String testLogin(Authentication authentication
 			, @AuthenticationPrincipal PrincipalDetails userDetails) {//DI 의존성 주입
-		System.out.println("/test/login ==============");
+		System.out.println("/test/login ==========================================");
 		PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
 		System.out.println("authentication: " +principalDetails.getUsername());
 		

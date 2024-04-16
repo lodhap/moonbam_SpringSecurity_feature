@@ -1,5 +1,7 @@
 package com.example.config.oauth;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.config.auth.PrincipalDetails;
 import com.example.config.oauth.provider.GoogleUserInfo;
+import com.example.config.oauth.provider.NaverUserInfo;
 import com.example.config.oauth.provider.OAuth2UserInfo;
 import com.example.dao.MemberDAO;
 import com.example.dto.Member;
@@ -30,7 +33,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService{
 	// userRequest 정보 -> loadUser함수 효출-> 구글로부터 회원프로필 받아준다.
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-		System.out.println("userRequest: " + userRequest);
+		// 데이터 확인 코드
+		//System.out.println("userRequest: " + userRequest);
 			//registrationId 프로퍼티로 어떤 OAuth로 로그인했는지 확인가능.
 		System.out.println("getClientRegistration: " + userRequest.getClientRegistration()); 
 		//System.out.println("getAccessToken: " + userRequest.getAccessToken());
@@ -42,36 +46,43 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService{
 		//accessToken을 이용해 유저정보 요청, 요청값 반환
 		OAuth2User oauth2User = super.loadUser(userRequest);
 		//System.out.println("getAttributes: "+oauth2User.getAttributes());
-		
-		// 회원가입을 위한 유저정보 추출&정제
-		String provider = userRequest.getClientRegistration().getRegistrationId(); //google 문자열
-		String providerId = oauth2User.getAttribute("sub");
-		String username = provider+"_"+providerId; //google_@!#%#%!$#!$!#^!
-		//System.out.println("============"+ username);
-		String password = bCryptPasswordEncoder.encode("겟인데어");
-		String email = oauth2User.getAttribute("email");
-		String role = "ROLE_USER";
-		
-		Member member = dao.userDetail(username);
-			// 회원가입진행
+
+		// 1. 소셜방식에 따른 oAuth2UsersInfo 생성 및 초기화
 		OAuth2UserInfo oAuth2UsersInfo = null;
 		if(userRequest.getClientRegistration().getRegistrationId().equals("google")) {
-			System.out.println("구글로그인요청");
-//			member = new Member(null, username, password, email, role, provider, providerId, null);
-//			dao.register(member);
-			
-			// attributes를 주면 알아서 만들어주는 객체
+				// attributes를 주면 알아서 만들어주는 객체
 			oAuth2UsersInfo = new GoogleUserInfo(oauth2User.getAttributes());
-		} else if(userRequest.getClientRegistration().getRegistrationId().equals("facebook")){ // 이미 있음
+			System.out.println("구글로그인요청");
+		} else if(userRequest.getClientRegistration().getRegistrationId().equals("naver")){ // 이미 있음
+			// {id=yWXGNXr1C_79ijMJkUroXyc1-jDatju2PAp0lUAyYfU, nickname=배성준, email=bsj4387@naver.com, name=배성준}
+			oAuth2UsersInfo = new NaverUserInfo((Map)oauth2User.getAttributes().get("response"));
 			System.out.println("네이버로그인요청");
-			//할게없음
+			//System.out.println((Map)oauth2User.getAttributes().get("response"));
 		} else {
-			System.out.println("우리는 구글과 페이스북만 지원해요.");
+			System.out.println("우리는 구글과 네이버만 지원해요.");
+		}
+
+		// 2. 회원가입을 위한 유저정보 추출&정제
+		String provider = oAuth2UsersInfo.getProvider();
+		String providerId = oAuth2UsersInfo.getProviderId();
+		//System.out.println("providerId: " + providerId);
+		String username = oAuth2UsersInfo.getProvider()+"_"+oAuth2UsersInfo.getProviderId();
+		String password = bCryptPasswordEncoder.encode("겟인데어");
+		String email = oAuth2UsersInfo.getEmail();
+		String role = "ROLE_USER";
+		
+		// 3. 중복확인 (회원가입유무확인)
+		// 중복이 아닐시 : member객체 초기화, 회원가입 진행
+		Member member = dao.userDetail(username);
+		if(member==null) {
+			System.out.println("최초 로그인입니다.");
+			member = new Member(providerId, username, password, email, role, provider, providerId, null);
+			dao.register(member);
 		}
 		
-		// 유저객체와 Map객체가 전달되어 PrincipalDetails 객체가 생성됨
-		// authentication 객체로 들어감
-		return new PrincipalDetails(member, oauth2User.getAttributes());
+		// 4. 유저객체와 Map객체가 전달되어 PrincipalDetails 객체가 생성됨
+		// 5. 최종적으로 authentication 객체로 들어감
+		return new PrincipalDetails(member, oAuth2UsersInfo.getAttributes());
 	}
 	
 //	super.loadUser(userRequest) 반환값
